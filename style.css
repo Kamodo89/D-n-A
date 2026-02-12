@@ -316,15 +316,12 @@ footer {
 /* ---- Responsive ---- */
 @media (max-width: 600px) {
   .characters {
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5rem;
+    flex-direction: row;  /* keep them side by side */
+    align-items: flex-end;
+    gap: 10px;            /* smaller gap for mobile */
   }
   .love-pulse {
-    margin: 0;
-    order: -1;
-  }
-  .love-card {
-    padding: 1.5rem;
+    order: 0;             /* keep heart in normal flow */
+    margin: 0 0 0 10px;   /* optional spacing if needed */
   }
 }

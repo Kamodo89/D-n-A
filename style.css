@@ -314,7 +314,7 @@ footer {
 }
 
 /* ---- Responsive ---- */
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
   .characters {
     flex-direction: row;  /* keep them side by side */
     align-items: flex-end;

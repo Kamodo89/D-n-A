@@ -1,110 +1,398 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Happy Valentine's Day - Duck and Ankylosaurus</title>
-  <meta name="description" content="A cute Valentine's Day page featuring an adorable duck and ankylosaurus, with floating hearts and love." />
-  <meta property="og:title" content="Happy Valentine's Day - Duck and Ankylosaurus" />
-  <meta property="og:description" content="An adorable duck and ankylosaurus Valentine's celebration with floating hearts." />
+  <title>D & A — Our Little World</title>
+  <meta name="description" content="A little world built for two — Duck & Ankylosaurus." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --pink-light: #ffe6f0;
+      --pink: #ff8fbf;
+      --pink-deep: #e74c6f;
+      --rose: #c44569;
+      --purple-soft: #d4a5ff;
+      --bg-start: #1a0a1e;
+      --bg-mid: #2d1135;
+      --bg-end: #0f0a1a;
+      --card-bg: rgba(255,255,255,0.07);
+      --card-border: rgba(255,255,255,0.14);
+      --text-primary: #fff5f8;
+      --text-secondary: #ffb8d0;
+      --font-display: 'Dancing Script', cursive;
+      --font-body: 'Outfit', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: linear-gradient(160deg, var(--bg-start), var(--bg-mid), var(--bg-end));
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ---- Floating Hearts ---- */
+    #hearts-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .floating-heart {
+      position: absolute;
+      bottom: -60px;
+      opacity: 0;
+      animation: floatUp var(--duration) var(--delay) ease-in forwards;
+      pointer-events: none;
+    }
+    @keyframes floatUp {
+      0%   { opacity: 0; transform: translateY(0) translateX(0) rotate(0deg) scale(var(--scale)); }
+      10%  { opacity: var(--max-opacity); }
+      50%  { opacity: var(--max-opacity); }
+      100% { opacity: 0; transform: translateY(calc(-100vh - 100px)) translateX(var(--sway)) rotate(var(--rotation)) scale(var(--scale)); }
+    }
+
+    /* ---- Sparkle dots ---- */
+    .sparkle {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: twinkle var(--tw-dur) var(--tw-delay) ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      0%   { opacity: 0; transform: scale(0.5); }
+      100% { opacity: var(--tw-op); transform: scale(1.2); }
+    }
+
+    /* ---- Main Content ---- */
+    main {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2.5rem;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ---- Logo / Monogram ---- */
+    .monogram {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 14vw, 9rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--pink) 0%, var(--purple-soft) 50%, var(--pink-deep) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      filter: drop-shadow(0 0 30px rgba(255,143,191,0.5));
+      animation: pulseGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes pulseGlow {
+      0%   { filter: drop-shadow(0 0 20px rgba(255,143,191,0.4)); }
+      100% { filter: drop-shadow(0 0 50px rgba(212,165,255,0.7)); }
+    }
+
+    .heart-icon {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      animation: heartbeat 1.4s ease-in-out infinite;
+    }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      14%       { transform: scale(1.2); }
+      28%       { transform: scale(1); }
+      42%       { transform: scale(1.15); }
+      56%       { transform: scale(1); }
+    }
+
+    .subtitle {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 3vw, 1.6rem);
+      color: var(--text-secondary);
+      letter-spacing: 0.04em;
+    }
+
+    /* ---- Buttons ---- */
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 1.1rem 2.6rem;
+      border-radius: 100px;
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      background: rgba(255,255,255,0.12);
+    }
+    .btn:hover::before { opacity: 1; }
+
+    .btn:hover {
+      transform: translateY(-4px) scale(1.03);
+    }
+
+    .btn-valentine {
+      background: linear-gradient(135deg, #e74c6f, #c44569, #a8325a);
+      color: #fff5f8;
+      box-shadow: 0 6px 30px rgba(231,76,111,0.45), 0 0 0 0 rgba(231,76,111,0.3);
+      border-color: rgba(255,143,191,0.3);
+    }
+    .btn-valentine:hover {
+      box-shadow: 0 10px 40px rgba(231,76,111,0.6), 0 0 60px rgba(255,143,191,0.25);
+    }
+
+    .btn-birthday {
+      background: linear-gradient(135deg, #8b3fa8, #6a2d8f, #c44569);
+      color: #fff5f8;
+      box-shadow: 0 6px 30px rgba(139,63,168,0.45), 0 0 0 0 rgba(212,165,255,0.3);
+      border-color: rgba(212,165,255,0.3);
+    }
+    .btn-birthday:hover {
+      box-shadow: 0 10px 40px rgba(139,63,168,0.6), 0 0 60px rgba(212,165,255,0.25);
+    }
+
+    .btn-icon {
+      font-size: 1.3rem;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+    .btn:hover .btn-icon { transform: scale(1.25) rotate(-5deg); }
+
+    /* ---- Divider ---- */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      width: min(380px, 90vw);
+      color: rgba(255,184,208,0.4);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,143,191,0.35), transparent);
+    }
+
+    /* ---- Footer ---- */
+    .footer-note {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.78rem;
+      color: rgba(255,184,208,0.4);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    /* ---- Characters ---- */
+    .characters-mini {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.5rem;
+      margin-bottom: -0.5rem;
+    }
+    .char-mini {
+      animation: sway 3s ease-in-out infinite;
+    }
+    .char-mini:nth-child(3) {
+      animation-delay: -1.5s;
+    }
+    @keyframes sway {
+      0%, 100% { transform: rotate(-4deg) translateY(0); }
+      50%       { transform: rotate(4deg) translateY(-6px); }
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 480px) {
+      .btn { padding: 1rem 2rem; font-size: 0.95rem; }
+    }
+  </style>
 </head>
 <body>
   <div id="hearts-container" aria-hidden="true"></div>
-  <div id="sparkles" aria-hidden="true"></div>
 
   <main>
-    <section id="hero">
-      <h1 class="title">Happy Valentine's Day</h1>
-      <p class="subtitle">A love story between a Duck &amp; an Ankylosaurus</p>
+    <!-- Mini characters -->
+    <div class="characters-mini" aria-hidden="true">
+      <!-- Duck -->
+      <svg class="char-mini" width="70" height="80" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="100" cy="150" rx="60" ry="50" fill="#FFD700"/>
+        <circle cx="130" cy="90" r="35" fill="#FFD700"/>
+        <circle cx="145" cy="85" r="4" fill="#1a1a2e"/>
+        <circle cx="147" cy="83" r="1.5" fill="white"/>
+        <path d="M160 90 Q175 90 175 100 Q160 105 160 100" fill="#FF8C00"/>
+        <path d="M90 195 Q90 210 105 210" stroke="#FF8C00" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M115 195 Q115 210 100 210" stroke="#FF8C00" stroke-width="6" fill="none" stroke-linecap="round"/>
+      </svg>
 
-      <div class="characters">
-        <div class="character duck" id="duck-character">
-          <svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="100" cy="150" rx="60" ry="50" fill="#FFD700"/>
-            <circle cx="130" cy="90" r="35" fill="#FFD700"/>
-            <path d="M70 145 Q50 140 60 120" stroke="#E6C200" stroke-width="8" fill="none" stroke-linecap="round"/>
-            <circle cx="145" cy="85" r="4" fill="#1a1a2e"/>
-            <circle cx="147" cy="83" r="1.5" fill="white"/>
-            <path d="M160 90 Q175 90 175 100 Q160 105 160 100" fill="#FF8C00"/>
-            <path d="M90 195 Q90 210 105 210" stroke="#FF8C00" stroke-width="6" fill="none" stroke-linecap="round"/>
-            <path d="M115 195 Q115 210 130 210" stroke="#FF8C00" stroke-width="6" fill="none" stroke-linecap="round"/>
-            <g transform="translate(100, 125) scale(0.7)" class="held-heart">
-              <path d="M0-12 C-5-22 -18-22 -18-12 C-18-2 0 10 0 16 C0 10 18-2 18-12 C18-22 5-22 0-12Z" fill="#e74c6f"/>
-            </g>
-          </svg>
-        </div>
+      <!-- Heart -->
+      <svg width="36" height="36" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:20px">
+        <path d="M50 85 C50 85 10 55 10 30 C10 17 20 10 30 10 C38 10 46 15 50 22 C54 15 62 10 70 10 C80 10 90 17 90 30 C90 55 50 85 50 85Z" fill="#e74c6f"/>
+      </svg>
 
-        <div class="love-pulse" id="love-pulse">
-          <svg viewBox="0 0 60 55" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#ff6b9d"/>
-                <stop offset="100%" stop-color="#c44569"/>
-              </linearGradient>
-            </defs>
-            <path d="M30 50 C30 50 55 35 55 18 C55 5 45 0 37 0 C32 0 30 5 30 5 C30 5 28 0 23 0 C15 0 5 5 5 18 C5 35 30 50 30 50Z" fill="url(#heartGrad)"/>
-          </svg>
-        </div>
+      <!-- Ankylosaurus -->
+      <svg class="char-mini" width="90" height="80" viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="150" cy="150" rx="100" ry="55" fill="#6B8E6B"/>
+        <circle cx="240" cy="110" r="40" fill="#6B8E6B"/>
+        <ellipse cx="150" cy="120" rx="90" ry="40" fill="#7DA87D"/>
+        <circle cx="252" cy="100" r="5" fill="#1a1a2e"/>
+        <circle cx="254" cy="98" r="2" fill="white"/>
+        <!-- Spikes -->
+        <ellipse cx="100" cy="90" rx="10" ry="18" fill="#4a6b4a" transform="rotate(-15 100 90)"/>
+        <ellipse cx="130" cy="80" rx="10" ry="18" fill="#4a6b4a" transform="rotate(-5 130 80)"/>
+        <ellipse cx="162" cy="78" rx="10" ry="18" fill="#4a6b4a" transform="rotate(5 162 78)"/>
+        <ellipse cx="192" cy="82" rx="10" ry="18" fill="#4a6b4a" transform="rotate(15 192 82)"/>
+        <!-- Club tail -->
+        <path d="M60 155 Q20 155 15 170" stroke="#6B8E6B" stroke-width="12" fill="none" stroke-linecap="round"/>
+        <circle cx="12" cy="177" r="16" fill="#4a6b4a"/>
+      </svg>
+    </div>
 
-        <div class="character ankylosaurus" id="ankylosaurus-character">
-          <svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="110" cy="130" rx="70" ry="45" fill="#5B8C5A"/>
-            <ellipse cx="80" cy="92" rx="12" ry="8" fill="#4A7A49" stroke="#3D6B3C" stroke-width="1"/>
-            <ellipse cx="110" cy="88" rx="14" ry="9" fill="#4A7A49" stroke="#3D6B3C" stroke-width="1"/>
-            <ellipse cx="140" cy="92" rx="12" ry="8" fill="#4A7A49" stroke="#3D6B3C" stroke-width="1"/>
-            <ellipse cx="95" cy="100" rx="10" ry="7" fill="#4A7A49" stroke="#3D6B3C" stroke-width="1"/>
-            <ellipse cx="125" cy="100" rx="10" ry="7" fill="#4A7A49" stroke="#3D6B3C" stroke-width="1"/>
-            <polygon points="42,115 30,108 45,110" fill="#4A7A49"/>
-            <polygon points="45,130 28,128 42,125" fill="#4A7A49"/>
-            <polygon points="175,115 190,108 178,110" fill="#4A7A49"/>
-            <polygon points="178,130 195,128 180,125" fill="#4A7A49"/>
-            <ellipse cx="110" cy="142" rx="50" ry="28" fill="#7DB87C"/>
-            <ellipse cx="42" cy="118" rx="32" ry="26" fill="#5B8C5A"/>
-            <path d="M20 100 Q42 85 64 100" fill="#4A7A49" stroke="#3D6B3C" stroke-width="1"/>
-            <polygon points="22,105 14,92 28,100" fill="#D4A94B"/>
-            <polygon points="62,105 70,92 56,100" fill="#D4A94B"/>
-            <circle cx="32" cy="113" r="5" fill="#1a1a2e"/>
-            <circle cx="33.5" cy="111.5" r="2" fill="white"/>
-            <circle cx="25" cy="122" r="5" fill="#ff9999" opacity="0.5"/>
-            <path d="M28 128 Q35 133 42 128" stroke="#1a1a2e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            <rect x="72" y="165" width="16" height="22" rx="8" fill="#4A7A49"/>
-            <rect x="132" y="165" width="16" height="22" rx="8" fill="#4A7A49"/>
-            <ellipse cx="80" cy="190" rx="12" ry="6" fill="#4A7A49"/>
-            <ellipse cx="140" cy="190" rx="12" ry="6" fill="#4A7A49"/>
-            <path d="M178 130 Q200 128 210 140 Q215 148 208 150" stroke="#5B8C5A" stroke-width="10" fill="none" stroke-linecap="round"/>
-            <circle cx="210" cy="149" r="12" fill="#4A7A49"/>
-            <g transform="translate(210, 140)" class="tail-bow">
-              <path d="M-8,-5 Q-2,-12 0,-5 Q2,-12 8,-5 Q2,0 0,3 Q-2,0 -8,-5Z" fill="#e74c6f"/>
-              <circle cx="0" cy="-2" r="2" fill="#c44569"/>
-            </g>
-          </svg>
-        </div>
-      </div>
+    <!-- Monogram -->
+    <div class="monogram">D &amp; A</div>
 
-      <div class="love-card" id="love-card">
-        <p class="love-text">
-          No matter how different we are,<br/>
-          love always finds a way
-        </p>
-        <p class="love-signature">-- Duck &amp; Anky</p>
-      </div>
+    <div class="heart-icon" aria-hidden="true">💕</div>
 
-      <p class="hint">Click anywhere to spread love</p>
-    </section>
+    <p class="subtitle">A little world built just for two</p>
+
+    <div class="divider">Choose your page</div>
+
+    <!-- Navigation Buttons -->
+    <div class="btn-group">
+      <a href="valentines.html" class="btn btn-valentine" id="btn-valentines">
+        <span class="btn-icon">💌</span>
+        Valentine's Day
+      </a>
+      <a href="birthday.html" class="btn btn-birthday" id="btn-birthday">
+        <span class="btn-icon">🎂</span>
+        Happy Birthday
+      </a>
+    </div>
   </main>
 
-  <footer>
-    <p>Made with love from Kamran</p>
-  </footer>
+  <p class="footer-note">Made with 💗 just for you</p>
 
-<div id="secret-heart" style="display:none; position:fixed; top:40%; left:50%; transform:translate(-50%, -50%); z-index:200; font-family:'Dancing Script', cursive; font-size:2rem; color:#ff69b4; text-align:center;">
-  💖 Love you Princess 💖
-</div>
+  <script>
+    // ---- Floating Hearts ----
+    const heartsContainer = document.getElementById('hearts-container');
+    const heartChars = ['♥', '❤', '💕', '💗', '💖', '💝', '✨', '⭐'];
+    const colors = ['#ff8fbf', '#e74c6f', '#d4a5ff', '#ffb8d0', '#c44569', '#ff6b9d'];
 
-  <script src="script.js"></script>
+    function spawnHeart() {
+      const el = document.createElement('span');
+      el.className = 'floating-heart';
+      el.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+      const size = 14 + Math.random() * 22;
+      const dur = 5 + Math.random() * 7;
+      const delay = Math.random() * 3;
+      const sway = (Math.random() - 0.5) * 160;
+      const rot = (Math.random() - 0.5) * 180;
+      const scale = 0.6 + Math.random() * 0.8;
+      const opacity = 0.3 + Math.random() * 0.5;
+      el.style.cssText = `
+        left: ${Math.random() * 100}%;
+        font-size: ${size}px;
+        color: ${colors[Math.floor(Math.random() * colors.length)]};
+        --duration: ${dur}s;
+        --delay: ${delay}s;
+        --sway: ${sway}px;
+        --rotation: ${rot}deg;
+        --scale: ${scale};
+        --max-opacity: ${opacity};
+      `;
+      heartsContainer.appendChild(el);
+      setTimeout(() => el.remove(), (dur + delay) * 1000);
+    }
+
+    // Spawn hearts continuously
+    for (let i = 0; i < 12; i++) setTimeout(spawnHeart, i * 400);
+    setInterval(spawnHeart, 600);
+
+    // ---- Sparkles ----
+    for (let i = 0; i < 30; i++) {
+      const sp = document.createElement('div');
+      sp.className = 'sparkle';
+      const size = 2 + Math.random() * 4;
+      sp.style.cssText = `
+        width: ${size}px; height: ${size}px;
+        left: ${Math.random() * 100}%;
+        top: ${Math.random() * 100}%;
+        background: ${['#ff8fbf','#d4a5ff','#fff5f8','#ffb8d0'][Math.floor(Math.random()*4)]};
+        --tw-dur: ${2 + Math.random() * 4}s;
+        --tw-delay: ${Math.random() * 3}s;
+        --tw-op: ${0.3 + Math.random() * 0.5};
+      `;
+      document.body.appendChild(sp);
+    }
+
+    // ---- Click burst hearts ----
+    document.addEventListener('click', (e) => {
+      for (let i = 0; i < 8; i++) {
+        const burst = document.createElement('span');
+        burst.style.cssText = `
+          position: fixed;
+          left: ${e.clientX}px;
+          top: ${e.clientY}px;
+          font-size: ${12 + Math.random() * 14}px;
+          pointer-events: none;
+          z-index: 999;
+          animation: burstOut ${0.6 + Math.random() * 0.4}s ease-out forwards;
+          --bx: ${(Math.random() - 0.5) * 120}px;
+          --by: ${(Math.random() - 0.5) * 120}px;
+        `;
+        burst.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+        burst.style.color = colors[Math.floor(Math.random() * colors.length)];
+        document.body.appendChild(burst);
+        setTimeout(() => burst.remove(), 1000);
+      }
+    });
+
+    // Inject burst keyframe
+    const style = document.createElement('style');
+    style.textContent = `@keyframes burstOut { 0% { opacity:1; transform:translate(0,0) scale(1); } 100% { opacity:0; transform:translate(var(--bx),var(--by)) scale(0.2); } }`;
+    document.head.appendChild(style);
+  </script>
 </body>
 </html>

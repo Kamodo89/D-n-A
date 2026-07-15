@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Big Quiz 🎯</title>
+  <meta name="description" content="Think you know everything? Take the quiz and find out..." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --paper:        #fdf4e3;
+      --ink:          #2c1a0e;
+      --ink-soft:     #6b4226;
+      --ink-faint:    #a07858;
+      --pink:         #e74c6f;
+      --purple:       #9b59b6;
+      --gold:         #f0a500;
+      --red-stamp:    #cc1111;
+      --tape-pink:    rgba(255,182,200,0.76);
+      --tape-yellow:  rgba(255,235,150,0.78);
+      --tape-blue:    rgba(170,210,255,0.73);
+      --tape-purple:  rgba(200,170,240,0.73);
+      --tape-green:   rgba(160,225,170,0.72);
+      --shadow:       3px 5px 22px rgba(60,30,10,0.18);
+      --font-hand:    'Caveat', cursive;
+      --font-display: 'Dancing Script', cursive;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-hand);
+      background-color: var(--paper);
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(170,130,70,0.09) 32px),
+        radial-gradient(ellipse at 20% 10%, rgba(255,220,170,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 90%, rgba(255,200,220,0.12) 0%, transparent 55%);
+      min-height: 100vh;
+      color: var(--ink);
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* ======== HEADER ======== */
+    .game-header {
+      text-align: center;
+      margin-bottom: 1.8rem;
+      position: relative;
+    }
+    .doodle {
+      position: absolute;
+      pointer-events: none;
+      font-size: var(--sz, 1.5rem);
+      animation: dFloat var(--spd, 3.5s) ease-in-out infinite;
+      animation-delay: var(--del, 0s);
+    }
+    @keyframes dFloat {
+      0%,100% { transform: translateY(0) rotate(var(--r0,-10deg)); }
+      50%      { transform: translateY(-7px) rotate(var(--r1, 8deg)); }
+    }
+
+    .game-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 8vw, 3.8rem);
+      font-weight: 700;
+      color: var(--pink);
+      text-shadow: 2px 3px 0 rgba(231,76,111,0.15);
+    }
+    .game-subtitle {
+      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+      color: var(--ink-soft);
+      margin-top: 0.3rem;
+    }
+
+    /* ======== PROGRESS ======== */
+    .progress-wrap {
+      width: min(560px, 94vw);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .progress-label {
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .progress-bar-bg {
+      flex: 1;
+      height: 10px;
+      background: rgba(160,120,80,0.15);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--pink), var(--purple));
+      border-radius: 10px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* ======== QUESTION CARD ======== */
+    .question-card {
+      background: #fff;
+      padding: 2rem 2.2rem 2.4rem;
+      box-shadow: var(--shadow);
+      width: min(560px, 94vw);
+      position: relative;
+      transform: rotate(-0.8deg);
+      transition: transform 0.3s ease;
+    }
+    /* Yellow tape top */
+    .question-card::before {
+      content: '';
+      position: absolute;
+      top: -12px; left: 50%;
+      transform: translateX(-50%) rotate(-1deg);
+      width: 85px; height: 23px;
+      background-color: var(--tape-yellow);
+      background-image: repeating-linear-gradient(90deg, transparent 0 5px, rgba(255,255,255,0.22) 5px 6px);
+      border-radius: 2px;
+    }
+
+    .q-number {
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 0.7rem;
+    }
+    .q-text {
+      font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.4;
+      margin-bottom: 1.4rem;
+    }
+
+    /* ======== ANSWER BUTTONS ======== */
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .ans-btn {
+      background: #fff;
+      border: 1.5px solid rgba(160,120,80,0.2);
+      padding: 0.85rem 1.2rem;
+      font-family: var(--font-hand);
+      font-size: 1.1rem;
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: 1px 2px 6px rgba(60,30,10,0.1);
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      position: relative;
+      width: 100%;
+    }
+    .ans-btn:hover:not(:disabled) {
+      transform: translateX(5px);
+      box-shadow: 2px 4px 14px rgba(60,30,10,0.16);
+      background: #fffbf5;
+    }
+    .ans-btn:disabled { cursor: default; opacity: 0.5; }
+    .ans-btn.selected-wrong {
+      background: rgba(204,17,17,0.07);
+      border-color: rgba(204,17,17,0.3);
+    }
+    .ans-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(160,120,80,0.3);
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      background: var(--paper);
+      color: var(--ink-soft);
+    }
+
+    /* ======== WRONG STAMP ======== */
+    .stamp-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 20;
+      opacity: 0;
+    }
+    .stamp-overlay.show { animation: stampReveal 0.4s ease-out forwards; }
+    @keyframes stampReveal {
+      0%   { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    .stamp-text {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 5rem);
+      font-weight: 700;
+      color: var(--red-stamp);
+      border: 5px solid var(--red-stamp);
+      padding: 0.2em 0.5em;
+      transform: rotate(-12deg);
+      border-radius: 6px;
+      text-shadow: 2px 2px 0 rgba(180,0,0,0.2);
+      box-shadow: inset 0 0 10px rgba(180,0,0,0.12);
+      background: rgba(255,255,255,0.7);
+      animation: stampSlam 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      letter-spacing: 0.04em;
+    }
+    @keyframes stampSlam {
+      0%   { transform: rotate(-12deg) scale(2.5); opacity: 0; }
+      60%  { transform: rotate(-12deg) scale(0.92); opacity: 1; }
+      100% { transform: rotate(-12deg) scale(1); opacity: 1; }
+    }
+
+    /* ======== WRONG MESSAGE ======== */
+    .wrong-msg-wrap {
+      width: min(560px, 94vw);
+      display: none;
+      margin-top: 1rem;
+    }
+    .wrong-msg-card {
+      background: #fff0f0;
+      border-left: 4px solid var(--red-stamp);
+      padding: 1rem 1.4rem;
+      box-shadow: 1px 3px 10px rgba(60,30,10,0.12);
+      font-size: clamp(1rem, 2.8vw, 1.15rem);
+      color: var(--ink);
+      line-height: 1.5;
+      animation: slideUp 0.4s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ======== NEXT BUTTON ======== */
+    .next-wrap {
+      width: min(560px, 94vw);
+      display: none;
+      justify-content: flex-end;
+      margin-top: 0.9rem;
+    }
+    .next-btn {
+      background: var(--pink);
+      color: #fff;
+      border: none;
+      padding: 0.85rem 2rem;
+      font-family: var(--font-hand);
+      font-size: 1.15rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 2px 4px 14px rgba(231,76,111,0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .next-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 3px 8px 20px rgba(231,76,111,0.45);
+    }
+
+    /* ======== SCORE STRIP ======== */
+    .score-strip {
+      width: min(560px, 94vw);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      padding: 0.5rem 0;
+      font-size: 0.9rem;
+      color: var(--ink-faint);
+    }
+    .score-val {
+      font-weight: 700;
+      color: var(--red-stamp);
+    }
+
+    /* ======== FINAL SCREEN ======== */
+    #final-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.4rem;
+      width: min(580px, 94vw);
+      animation: fadeIn 0.7s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .final-card {
+      background: #fff;
+      padding: 2.5rem 2.4rem 3rem;
+      box-shadow: var(--shadow);
+      width: 100%;
+      text-align: center;
+      position: relative;
+      transform: rotate(-0.5deg);
+    }
+    .final-card::before {
+      content: '';
+      position: absolute;
+      top: -13px; left: 50%;
+      transform: translateX(-50%) rotate(-1deg);
+      width: 95px; height: 24px;
+      background-color: var(--tape-pink);
+      background-image: repeating-linear-gradient(90deg, transparent 0 5px, rgba(255,255,255,0.22) 5px 6px);
+      border-radius: 2px;
+    }
+    .final-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 7vw, 3rem);
+      color: var(--pink);
+      text-shadow: 2px 3px 0 rgba(231,76,111,0.14);
+      margin-bottom: 0.5rem;
+    }
+    .final-score {
+      font-size: clamp(1.1rem, 3vw, 1.3rem);
+      color: var(--red-stamp);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .final-msg {
+      font-size: clamp(1rem, 2.5vw, 1.12rem);
+      color: var(--ink);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .final-sig {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--pink);
+      display: block;
+      margin-top: 0.5rem;
+    }
+    .final-heart {
+      font-size: 1.8rem;
+      display: block;
+      animation: heartbeat 1.5s ease-in-out infinite;
+    }
+    @keyframes heartbeat {
+      0%,100% { transform: scale(1); }
+      14%     { transform: scale(1.25); }
+      28%     { transform: scale(1); }
+      42%     { transform: scale(1.18); }
+    }
+
+    .final-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .final-btn {
+      padding: 0.85rem 1.8rem;
+      font-family: var(--font-hand);
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: inline-block;
+    }
+    .final-btn:hover { transform: translateY(-3px) scale(1.04); }
+    .final-btn-again {
+      background: var(--pink);
+      color: #fff;
+      box-shadow: 2px 4px 14px rgba(231,76,111,0.35);
+    }
+    .final-btn-home {
+      background: #fff;
+      color: var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    /* ======== CONFETTI ======== */
+    .confetti {
+      position: fixed; top: -18px;
+      border-radius: 2px; pointer-events: none; z-index: 99;
+      animation: confFall var(--cf-dur) var(--cf-del) ease-in forwards;
+    }
+    @keyframes confFall {
+      0%   { opacity: 1; transform: translateY(0) translateX(0) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(108vh) translateX(var(--cf-x)) rotate(var(--cf-rot)); }
+    }
+
+    /* back link top-left */
+    .back-link {
+      position: fixed;
+      top: 14px; left: 14px;
+      background: #fff;
+      padding: 0.55rem 1.1rem;
+      font-family: var(--font-hand);
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      text-decoration: none;
+      box-shadow: 1px 2px 8px rgba(60,30,10,0.14);
+      transform: rotate(-2deg);
+      transition: transform 0.2s ease;
+      z-index: 50;
+    }
+    .back-link:hover { transform: rotate(0deg) scale(1.04); color: var(--pink); }
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="back-link" id="back-home">← Home</a>
+
+  <!-- HEADER -->
+  <div class="game-header">
+    <span class="doodle" style="top:0;left:-50px;--sz:1.4rem;--r0:-15deg;--r1:10deg;">🤔</span>
+    <span class="doodle" style="top:0;right:-50px;--sz:1.4rem;--r0:12deg;--r1:-8deg;--del:-1s;">😤</span>
+    <h1 class="game-title">The Big Quiz 🎯</h1>
+    <p class="game-subtitle">Think you're smart? Let's see about that~</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progress-wrap">
+    <span class="progress-label" id="progress-label">Question 1 of 8</span>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- QUESTION CARD -->
+  <div class="question-card" id="question-card">
+    <p class="q-number" id="q-number">Question 1 of 8</p>
+    <p class="q-text" id="q-text">Loading...</p>
+    <div class="answers" id="answers"></div>
+    <!-- WRONG STAMP OVERLAY -->
+    <div class="stamp-overlay" id="stamp-overlay">
+      <div class="stamp-text">WRONG!</div>
+    </div>
+  </div>
+
+  <!-- WRONG MESSAGE -->
+  <div class="wrong-msg-wrap" id="wrong-msg-wrap">
+    <div class="wrong-msg-card" id="wrong-msg-card"></div>
+  </div>
+
+  <!-- NEXT BUTTON -->
+  <div class="next-wrap" id="next-wrap">
+    <button class="next-btn" id="next-btn">
+      Next Question →
+    </button>
+  </div>
+
+  <!-- SCORE STRIP -->
+  <div class="score-strip" id="score-strip">
+    <span>Score: <span class="score-val" id="score-display">0</span> / 8</span>
+    <span id="wrong-count-display" style="color:var(--red-stamp);">Wrong: 0</span>
+  </div>
+
+  <!-- FINAL SCREEN -->
+  <div id="final-screen">
+    <div class="final-card">
+      <p class="final-title">🎉 Quiz Complete! 🎉</p>
+      <p class="final-score" id="final-score-text">Final Score: 0 / 8</p>
+      <p class="final-msg" id="final-msg-text"></p>
+      <span class="final-sig">— Kamo</span>
+      <span class="final-heart">💗</span>
+    </div>
+    <div class="final-btns">
+      <button class="final-btn final-btn-again" id="play-again-btn">Play Again 🎮</button>
+      <a href="index.html" class="final-btn final-btn-home">Back to Home 🏠</a>
+    </div>
+  </div>
+
+  <script>
+    /* ======== QUESTIONS ======== */
+    const questions = [
+      {
+        q: "How many times per day does Kamran think about you?",
+        options: ["Once", "A few times", "About 100 times", "All the time"],
+        wrong: "WRONG! The answer is every single second of every single day. Every. Single. One. 😤"
+      },
+      {
+        q: "Complete the sentence: \"Alayka is ___\"",
+        options: ["Pretty", "Smart", "Funny", "All of the above"],
+        wrong: "WRONG! She is ALL of those and about a million other things no word has ever been invented to describe! Come on!! 😤"
+      },
+      {
+        q: "What is 2 + 2?",
+        options: ["4", "3", "22", "5"],
+        wrong: "WRONG! The real answer is K + A = ♾️ love. Brush up on your arithmetic 😤"
+      },
+      {
+        q: "Pick the one that shines the brightest:",
+        options: ["The sun", "The moon", "The stars", "A lighthouse"],
+        wrong: "WRONG! It's obviously ALAYKA'S SMILE. How are you this bad at a quiz about yourself?? 😤"
+      },
+      {
+        q: "On a scale of 1–10, how cute are you?",
+        options: ["8", "9", "10", "Off the charts"],
+        wrong: "WRONG! There is no scale. Scientists are still working on a number big enough. Unbelievable 😤"
+      },
+      {
+        q: "What is Kamran's absolute favourite thing in the world?",
+        options: ["Food", "Sleep", "Gaming", "You"],
+        wrong: "WRONG! ...okay fine, it's obviously you. But you still don't get the points. Rules are rules 😤"
+      },
+      {
+        q: "What should happen every single day of the year?",
+        options: ["Get presents", "Eat cake", "Sleep in all day", "Celebrate Alayka"],
+        wrong: "WRONG! You should be celebrated every single day — not just your birthday! (Although cake every day also sounds pretty good) 😤"
+      },
+      {
+        q: "How would you describe Kamran & Alayka's love story?",
+        options: ["Cute", "Beautiful", "Perfect", "Endless"],
+        wrong: "WRONG! None of those words are anywhere near big enough. Someone needs to invent a whole new word just for you two 😤"
+      }
+    ];
+
+    const finalMessage = `You got absolutely zero right. Zero. None. 0/8.\n\nBut honestly? You don't need to be good at quizzes — you're already the best at being you, and that's the most important thing there is.\n\nThis quiz was rigged from the very start, because you deserve a love that's completely, impossibly, endlessly beyond what any score could ever measure.\n\nHappy Birthday, Alayka Veronica Hilliam! 🎂`;
+
+    /* ======== STATE ======== */
+    let currentQ = 0;
+    let wrongCount = 0;
+    let answered = false;
+
+    /* ======== ELEMENTS ======== */
+    const qCard        = document.getElementById('question-card');
+    const qNumber      = document.getElementById('q-number');
+    const qText        = document.getElementById('q-text');
+    const answersEl    = document.getElementById('answers');
+    const stampOverlay = document.getElementById('stamp-overlay');
+    const wrongMsgWrap = document.getElementById('wrong-msg-wrap');
+    const wrongMsgCard = document.getElementById('wrong-msg-card');
+    const nextWrap     = document.getElementById('next-wrap');
+    const nextBtn      = document.getElementById('next-btn');
+    const scoreEl      = document.getElementById('score-display');
+    const wrongCountEl = document.getElementById('wrong-count-display');
+    const progressFill = document.getElementById('progress-fill');
+    const progressLbl  = document.getElementById('progress-label');
+    const finalScreen  = document.getElementById('final-screen');
+    const gameElements = [
+      document.getElementById('progress-wrap'),
+      qCard,
+      document.getElementById('score-strip')
+    ];
+
+    /* ======== RENDER QUESTION ======== */
+    function renderQuestion() {
+      answered = false;
+      stampOverlay.classList.remove('show');
+      stampOverlay.style.opacity = '0';
+      wrongMsgWrap.style.display = 'none';
+      nextWrap.style.display     = 'none';
+      qCard.style.transform      = `rotate(${(Math.random()-0.5)*2.5}deg)`;
+
+      const q = questions[currentQ];
+      qNumber.textContent = `Question ${currentQ + 1} of ${questions.length}`;
+      qText.textContent   = q.q;
+      progressLbl.textContent = `Question ${currentQ + 1} of ${questions.length}`;
+      progressFill.style.width = `${(currentQ / questions.length) * 100}%`;
+
+      answersEl.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'ans-btn';
+        btn.id = `ans-${i}`;
+        btn.innerHTML = `<span class="ans-letter">${letters[i]}</span>${opt}`;
+        btn.addEventListener('click', () => handleAnswer(btn, q.wrong));
+        answersEl.appendChild(btn);
+      });
+    }
+
+    /* ======== HANDLE ANSWER ======== */
+    function handleAnswer(btn, wrongMsg) {
+      if (answered) return;
+      answered = true;
+
+      // Highlight selected as wrong
+      btn.classList.add('selected-wrong');
+
+      // Disable all buttons
+      answersEl.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
+
+      // Increment wrong count
+      wrongCount++;
+      wrongCountEl.textContent = `Wrong: ${wrongCount}`;
+
+      // Show stamp
+      stampOverlay.style.opacity = '0';
+      stampOverlay.classList.remove('show');
+      void stampOverlay.offsetWidth; // force reflow
+      stampOverlay.classList.add('show');
+
+      // Show wrong message after stamp
+      setTimeout(() => {
+        wrongMsgCard.textContent = wrongMsg;
+        wrongMsgWrap.style.display = 'block';
+        nextWrap.style.display = 'flex';
+
+        // Last question?
+        if (currentQ === questions.length - 1) {
+          nextBtn.textContent = 'See Results 🎉';
+        } else {
+          nextBtn.textContent = 'Next Question →';
+        }
+      }, 500);
+    }
+
+    /* ======== NEXT QUESTION ======== */
+    nextBtn.addEventListener('click', () => {
+      currentQ++;
+      if (currentQ >= questions.length) {
+        showFinalScreen();
+      } else {
+        renderQuestion();
+      }
+    });
+
+    /* ======== FINAL SCREEN ======== */
+    function showFinalScreen() {
+      progressFill.style.width = '100%';
+      gameElements.forEach(el => { if (el) el.style.display = 'none'; });
+      wrongMsgWrap.style.display = 'none';
+      nextWrap.style.display     = 'none';
+
+      document.getElementById('final-score-text').textContent = `Final Score: 0 / ${questions.length}`;
+      document.getElementById('final-msg-text').innerHTML = finalMessage
+        .split('\n')
+        .map(line => line.trim() ? `<span style="display:block;margin-bottom:0.6rem;">${line}</span>` : '')
+        .join('');
+
+      finalScreen.style.display = 'flex';
+
+      // Confetti celebration
+      launchConfetti(100);
+      setTimeout(() => launchConfetti(80), 1500);
+    }
+
+    /* ======== PLAY AGAIN ======== */
+    document.getElementById('play-again-btn').addEventListener('click', () => {
+      currentQ   = 0;
+      wrongCount = 0;
+      scoreEl.textContent      = '0';
+      wrongCountEl.textContent = 'Wrong: 0';
+
+      finalScreen.style.display = 'none';
+      gameElements.forEach(el => { if (el) el.style.display = ''; });
+      // Restore flex on next-wrap when it shows
+      renderQuestion();
+    });
+
+    /* ======== CONFETTI ======== */
+    const confColors = ['#ffd700','#ff8fbf','#d4a5ff','#e74c6f','#ff6b9d','#ffb300','#fdf4e3','#9b59b6'];
+    function launchConfetti(n) {
+      for (let i = 0; i < n; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti';
+        const w   = 6 + Math.random() * 8;
+        const dur = 2.5 + Math.random() * 2;
+        const del = Math.random() * 1.5;
+        el.style.cssText = `
+          left:${Math.random()*100}%;
+          width:${w}px; height:${w*(0.4+Math.random()*0.6)}px;
+          background:${confColors[Math.floor(Math.random()*confColors.length)]};
+          border-radius:${Math.random()>0.5?'50%':'2px'};
+          --cf-dur:${dur}s; --cf-del:${del}s;
+          --cf-x:${(Math.random()-0.5)*260}px;
+          --cf-rot:${Math.random()*720}deg;
+        `;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), (dur + del) * 1000);
+      }
+    }
+
+    /* ======== CLICK BURST ======== */
+    const burstChars = ['😤','❌','💢','🚫','✖️','💥'];
+    document.addEventListener('click', e => {
+      // Only burst on answer buttons
+      if (!e.target.closest('.ans-btn')) return;
+      for (let i = 0; i < 6; i++) {
+        const el = document.createElement('span');
+        const bx = (Math.random()-0.5)*100, by = (Math.random()-0.5)*100;
+        el.style.cssText = `
+          position:fixed; left:${e.clientX}px; top:${e.clientY}px;
+          font-size:${14+Math.random()*12}px; pointer-events:none; z-index:999;
+          animation:bOut ${0.5+Math.random()*0.3}s ease-out forwards;
+          --bx:${bx}px; --by:${by}px;
+        `;
+        el.textContent = burstChars[Math.floor(Math.random()*burstChars.length)];
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 900);
+      }
+    });
+
+    const bStyle = document.createElement('style');
+    bStyle.textContent = `@keyframes bOut{0%{opacity:1;transform:translate(0,0) scale(1);}100%{opacity:0;transform:translate(var(--bx),var(--by)) scale(0.15);}}`;
+    document.head.appendChild(bStyle);
+
+    /* ======== INIT ======== */
+    renderQuestion();
+  </script>
+</body>
+</html>

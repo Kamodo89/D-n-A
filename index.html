@@ -3,396 +3,384 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>K & A — Our Little World</title>
-  <meta name="description" content="A little world built for two — Kamran & Alayka." />
+  <title>K &amp; A — Our Little Scrapbook</title>
+  <meta name="description" content="Kamran &amp; Alayka — a little corner of the internet, just for two." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --pink-light: #ffe6f0;
-      --pink: #ff8fbf;
-      --pink-deep: #e74c6f;
-      --rose: #c44569;
-      --purple-soft: #d4a5ff;
-      --bg-start: #1a0a1e;
-      --bg-mid: #2d1135;
-      --bg-end: #0f0a1a;
-      --card-bg: rgba(255,255,255,0.07);
-      --card-border: rgba(255,255,255,0.14);
-      --text-primary: #fff5f8;
-      --text-secondary: #ffb8d0;
+      --paper:       #fdf4e3;
+      --ink:         #2c1a0e;
+      --ink-soft:    #6b4226;
+      --ink-faint:   #a07858;
+      --pink:        #e74c6f;
+      --purple:      #9b59b6;
+      --gold:        #f0a500;
+      --tape-pink:   rgba(255,182,200,0.76);
+      --tape-purple: rgba(200,170,240,0.73);
+      --tape-yellow: rgba(255,235,150,0.78);
+      --tape-green:  rgba(160,225,170,0.72);
+      --shadow:      3px 5px 22px rgba(60,30,10,0.18);
+      --font-hand:    'Caveat', cursive;
       --font-display: 'Dancing Script', cursive;
-      --font-body: 'Outfit', sans-serif;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: var(--font-body);
-      background: linear-gradient(160deg, var(--bg-start), var(--bg-mid), var(--bg-end));
-      color: var(--text-primary);
+      font-family: var(--font-hand);
+      background-color: var(--paper);
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(170,130,70,0.09) 32px),
+        radial-gradient(ellipse at 25% 15%, rgba(255,220,170,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 85%, rgba(255,200,210,0.12) 0%, transparent 55%);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      color: var(--ink);
       overflow-x: hidden;
-      position: relative;
     }
 
-    /* ---- Floating Hearts ---- */
-    #hearts-container {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-    .floating-heart {
+    /* tape strip helper - applied via ::before/::after */
+    .tape-strip {
       position: absolute;
-      bottom: -60px;
-      opacity: 0;
-      animation: floatUp var(--duration) var(--delay) ease-in forwards;
-      pointer-events: none;
-    }
-    @keyframes floatUp {
-      0%   { opacity: 0; transform: translateY(0) translateX(0) rotate(0deg) scale(var(--scale)); }
-      10%  { opacity: var(--max-opacity); }
-      50%  { opacity: var(--max-opacity); }
-      100% { opacity: 0; transform: translateY(calc(-100vh - 100px)) translateX(var(--sway)) rotate(var(--rotation)) scale(var(--scale)); }
+      height: 24px;
+      border-radius: 2px;
+      background-image: repeating-linear-gradient(
+        90deg, transparent 0 5px, rgba(255,255,255,0.22) 5px 6px
+      );
     }
 
-    /* ---- Sparkle dots ---- */
-    .sparkle {
-      position: fixed;
-      border-radius: 50%;
-      pointer-events: none;
-      animation: twinkle var(--tw-dur) var(--tw-delay) ease-in-out infinite alternate;
-    }
-    @keyframes twinkle {
-      0%   { opacity: 0; transform: scale(0.5); }
-      100% { opacity: var(--tw-op); transform: scale(1.2); }
-    }
-
-    /* ---- Main Content ---- */
-    main {
+    /* ======== PAGE ======== */
+    .page {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
       position: relative;
-      z-index: 10;
+    }
+
+    /* ======== HERO ======== */
+    .hero {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2.5rem;
-      padding: 2rem;
-      text-align: center;
+      padding-bottom: 1.5rem;
+      position: relative;
+      min-height: 320px;
     }
 
-    /* ---- Logo / Monogram ---- */
+    .doodle {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      font-size: var(--sz, 1.7rem);
+      animation: dFloat var(--spd, 3.6s) ease-in-out infinite;
+      animation-delay: var(--del, 0s);
+      z-index: 1;
+    }
+    @keyframes dFloat {
+      0%,100% { transform: translateY(0) rotate(var(--r0,-10deg)); }
+      50%      { transform: translateY(-9px) rotate(var(--r1, 8deg)); }
+    }
+
+    /* TITLE POLAROID */
+    .title-polaroid {
+      background: #fff;
+      padding: 1.8rem 2.8rem 3.2rem;
+      box-shadow: var(--shadow), 0 1px 2px rgba(0,0,0,0.08);
+      transform: rotate(-1.5deg);
+      position: relative;
+      width: min(340px, 90vw);
+      text-align: center;
+      z-index: 5;
+      margin-top: 0.5rem;
+    }
+    /* Pink washi tape on top */
+    .title-polaroid::before {
+      content: '';
+      position: absolute;
+      top: -13px; left: 50%;
+      transform: translateX(-50%) rotate(-1.5deg);
+      width: 88px; height: 24px;
+      background-color: var(--tape-pink);
+      background-image: repeating-linear-gradient(90deg, transparent 0 5px, rgba(255,255,255,0.22) 5px 6px);
+      border-radius: 2px;
+      z-index: 6;
+    }
     .monogram {
       font-family: var(--font-display);
-      font-size: clamp(5rem, 14vw, 9rem);
+      font-size: clamp(4.5rem, 14vw, 7rem);
       font-weight: 700;
-      background: linear-gradient(135deg, var(--pink) 0%, var(--purple-soft) 50%, var(--pink-deep) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--pink);
       line-height: 1;
-      filter: drop-shadow(0 0 30px rgba(255,143,191,0.5));
-      animation: pulseGlow 3s ease-in-out infinite alternate;
+      text-shadow: 2px 3px 0 rgba(231,76,111,0.14);
     }
-    @keyframes pulseGlow {
-      0%   { filter: drop-shadow(0 0 20px rgba(255,143,191,0.4)); }
-      100% { filter: drop-shadow(0 0 50px rgba(212,165,255,0.7)); }
-    }
-
-    .heart-icon {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      animation: heartbeat 1.4s ease-in-out infinite;
-    }
-    @keyframes heartbeat {
-      0%, 100% { transform: scale(1); }
-      14%       { transform: scale(1.2); }
-      28%       { transform: scale(1); }
-      42%       { transform: scale(1.15); }
-      56%       { transform: scale(1); }
-    }
-
-    .subtitle {
-      font-family: var(--font-display);
-      font-size: clamp(1.1rem, 3vw, 1.6rem);
-      color: var(--text-secondary);
-      letter-spacing: 0.04em;
-    }
-
-    /* ---- Buttons ---- */
-    .btn-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      justify-content: center;
-      margin-top: 1rem;
-    }
-
-    .btn {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.7rem;
-      padding: 1.1rem 2.6rem;
-      border-radius: 100px;
-      font-family: var(--font-body);
-      font-size: 1.05rem;
+    .polaroid-caption {
+      margin-top: 0.5rem;
+      font-size: 1.1rem;
       font-weight: 600;
-      letter-spacing: 0.03em;
-      text-decoration: none;
-      border: 1.5px solid transparent;
-      cursor: pointer;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
-      overflow: hidden;
+      color: var(--ink-soft);
+    }
+    .polaroid-sub {
+      font-size: 0.88rem;
+      color: var(--ink-faint);
+      margin-top: 0.2rem;
     }
 
-    .btn::before {
+    /* ======== SECTION HINT ======== */
+    .section-hint {
+      text-align: center;
+      font-size: 1rem;
+      color: var(--ink-faint);
+      margin: 2.2rem 0 1.4rem;
+      position: relative;
+    }
+    .section-hint::before,
+    .section-hint::after {
       content: '';
       position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      background: rgba(255,255,255,0.12);
-    }
-    .btn:hover::before { opacity: 1; }
-
-    .btn:hover {
-      transform: translateY(-4px) scale(1.03);
-    }
-
-    .btn-valentine {
-      background: linear-gradient(135deg, #e74c6f, #c44569, #a8325a);
-      color: #fff5f8;
-      box-shadow: 0 6px 30px rgba(231,76,111,0.45), 0 0 0 0 rgba(231,76,111,0.3);
-      border-color: rgba(255,143,191,0.3);
-    }
-    .btn-valentine:hover {
-      box-shadow: 0 10px 40px rgba(231,76,111,0.6), 0 0 60px rgba(255,143,191,0.25);
-    }
-
-    .btn-birthday {
-      background: linear-gradient(135deg, #8b3fa8, #6a2d8f, #c44569);
-      color: #fff5f8;
-      box-shadow: 0 6px 30px rgba(139,63,168,0.45), 0 0 0 0 rgba(212,165,255,0.3);
-      border-color: rgba(212,165,255,0.3);
-    }
-    .btn-birthday:hover {
-      box-shadow: 0 10px 40px rgba(139,63,168,0.6), 0 0 60px rgba(212,165,255,0.25);
-    }
-
-    .btn-icon {
-      font-size: 1.3rem;
-      display: inline-block;
-      transition: transform 0.3s ease;
-    }
-    .btn:hover .btn-icon { transform: scale(1.25) rotate(-5deg); }
-
-    /* ---- Divider ---- */
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      width: min(380px, 90vw);
-      color: rgba(255,184,208,0.4);
-      font-size: 0.8rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
+      top: 50%;
+      width: 22%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,143,191,0.35), transparent);
+      background: rgba(160,120,88,0.25);
+    }
+    .section-hint::before { right: calc(50% + 130px); }
+    .section-hint::after  { left:  calc(50% + 130px); }
+
+    /* ======== NAV CARDS ======== */
+    .nav-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.2rem;
+      justify-content: center;
     }
 
-    /* ---- Footer ---- */
-    .footer-note {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.78rem;
-      color: rgba(255,184,208,0.4);
-      letter-spacing: 0.08em;
-      white-space: nowrap;
+    .nav-card {
+      background: #fff;
+      padding: 1.5rem 1.8rem 2rem;
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: var(--ink);
+      position: relative;
+      width: min(220px, 88vw);
+      text-align: center;
+      display: block;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .nav-card:nth-child(1) { transform: rotate(-2.5deg); }
+    .nav-card:nth-child(2) { transform: rotate(2deg); }
+    .nav-card:hover {
+      transform: rotate(0deg) translateY(-8px) scale(1.04) !important;
+      box-shadow: 5px 14px 35px rgba(60,30,10,0.26);
       z-index: 10;
     }
+    /* Tape on each card */
+    .nav-card::before {
+      content: '';
+      position: absolute;
+      top: -12px; left: 50%;
+      transform: translateX(-50%);
+      width: 65px; height: 22px;
+      border-radius: 2px;
+      background-image: repeating-linear-gradient(90deg, transparent 0 5px, rgba(255,255,255,0.22) 5px 6px);
+    }
+    .nav-card:nth-child(1)::before { background-color: var(--tape-pink); }
+    .nav-card:nth-child(2)::before { background-color: var(--tape-purple); }
 
-    /* ---- Characters ---- */
-    .characters-mini {
-      display: flex;
-      align-items: flex-end;
-      gap: 0.5rem;
-      margin-bottom: -0.5rem;
+    .nav-icon {
+      font-size: 2.6rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      transition: transform 0.3s ease;
     }
-    .char-mini {
-      animation: sway 3s ease-in-out infinite;
+    .nav-card:hover .nav-icon { transform: scale(1.2) rotate(-6deg); }
+    .nav-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: block;
     }
-    .char-mini:nth-child(3) {
-      animation-delay: -1.5s;
-    }
-    @keyframes sway {
-      0%, 100% { transform: rotate(-4deg) translateY(0); }
-      50%       { transform: rotate(4deg) translateY(-6px); }
+    .nav-desc {
+      font-size: 0.84rem;
+      color: var(--ink-soft);
+      margin-top: 0.3rem;
+      line-height: 1.4;
     }
 
-    /* ---- Responsive ---- */
-    @media (max-width: 480px) {
-      .btn { padding: 1rem 2rem; font-size: 0.95rem; }
+    /* ======== STICKY NOTE ======== */
+    .sticky {
+      background: #fffde7;
+      padding: 1.2rem 1.4rem;
+      box-shadow: 2px 4px 14px rgba(60,30,10,0.14);
+      position: relative;
+      width: min(290px, 88vw);
+      margin: 3rem auto 0;
+      transform: rotate(1.2deg);
+    }
+    .sticky::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 26px;
+      background: rgba(230,210,80,0.45);
+    }
+    .sticky p {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--ink);
+      padding-top: 0.3rem;
+    }
+
+    /* ======== GAME CORNER ======== */
+    .game-corner {
+      position: fixed;
+      bottom: 22px;
+      right: 18px;
+      z-index: 100;
+      text-decoration: none;
+    }
+    .game-note {
+      background: #c8f5c8;
+      padding: 0.85rem 1rem 1.1rem;
+      box-shadow: 2px 4px 16px rgba(60,30,10,0.2);
+      transform: rotate(5deg);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      width: 130px;
+      text-align: center;
+    }
+    .game-note::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 22px;
+      background: rgba(100,200,100,0.42);
+    }
+    .game-note::after {
+      content: '';
+      position: absolute;
+      top: -11px; left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 55px; height: 20px;
+      background-color: var(--tape-green);
+      background-image: repeating-linear-gradient(90deg, transparent 0 5px, rgba(255,255,255,0.22) 5px 6px);
+      border-radius: 2px;
+    }
+    .game-corner:hover .game-note {
+      transform: rotate(0deg) scale(1.08);
+      box-shadow: 4px 8px 24px rgba(60,30,10,0.26);
+    }
+    .game-note-icon  { font-size: 1.7rem; display: block; margin-bottom: 0.25rem; }
+    .game-note-text  { font-size: 0.85rem; font-weight: 700; color: #1a5a1a; line-height: 1.3; }
+
+    /* ======== FLOATING HEARTS ======== */
+    #hearts-layer {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .fheart {
+      position: absolute; bottom: -40px; opacity: 0;
+      font-size: var(--fs); color: var(--fc);
+      animation: riseH var(--dur) var(--del) ease-in forwards;
+    }
+    @keyframes riseH {
+      0%   { opacity: 0; transform: translateY(0) rotate(0deg); }
+      12%  { opacity: 0.3; }
+      88%  { opacity: 0.2; }
+      100% { opacity: 0; transform: translateY(-88vh) translateX(var(--sx)) rotate(18deg); }
+    }
+
+    /* ======== FOOTER ======== */
+    .page-foot {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: var(--ink-faint);
+    }
+
+    @media (max-width: 520px) {
+      .nav-card  { width: 90vw; }
+      .nav-cards { gap: 2.8rem; }
+      .section-hint::before, .section-hint::after { display: none; }
     }
   </style>
 </head>
 <body>
-  <div id="hearts-container" aria-hidden="true"></div>
+  <div id="hearts-layer" aria-hidden="true"></div>
 
-  <main>
-    <!-- Mini characters -->
-    <div class="characters-mini" aria-hidden="true">
-      <!-- Duck -->
-      <svg class="char-mini" width="70" height="80" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="100" cy="150" rx="60" ry="50" fill="#FFD700"/>
-        <circle cx="130" cy="90" r="35" fill="#FFD700"/>
-        <circle cx="145" cy="85" r="4" fill="#1a1a2e"/>
-        <circle cx="147" cy="83" r="1.5" fill="white"/>
-        <path d="M160 90 Q175 90 175 100 Q160 105 160 100" fill="#FF8C00"/>
-        <path d="M90 195 Q90 210 105 210" stroke="#FF8C00" stroke-width="6" fill="none" stroke-linecap="round"/>
-        <path d="M115 195 Q115 210 100 210" stroke="#FF8C00" stroke-width="6" fill="none" stroke-linecap="round"/>
-      </svg>
+  <div class="page">
+    <!-- HERO -->
+    <div class="hero">
+      <span class="doodle" style="top:8px;  left:4%;  --sz:1.6rem;--r0:-15deg;--r1:10deg;--del:0s;">💕</span>
+      <span class="doodle" style="top:42px; right:5%; --sz:1.5rem;--r0:12deg; --r1:-8deg;--del:-1.2s;">✨</span>
+      <span class="doodle" style="top:200px;left:2%;  --sz:1.3rem;--r0:5deg;  --r1:-12deg;--del:-2s;--spd:4.2s;">🌸</span>
+      <span class="doodle" style="top:205px;right:3%; --sz:1.5rem;--r0:-8deg; --r1:12deg; --del:-0.5s;--spd:5s;">⭐</span>
+      <span class="doodle" style="top:310px;left:7%;  --sz:1.3rem;--r0:20deg; --r1:-10deg;--del:-1s;--spd:3.2s;">🎀</span>
+      <span class="doodle" style="top:300px;right:7%; --sz:1.3rem;--r0:-18deg;--r1:8deg;  --del:-1.8s;--spd:4s;">💗</span>
 
-      <!-- Heart -->
-      <svg width="36" height="36" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:20px">
-        <path d="M50 85 C50 85 10 55 10 30 C10 17 20 10 30 10 C38 10 46 15 50 22 C54 15 62 10 70 10 C80 10 90 17 90 30 C90 55 50 85 50 85Z" fill="#e74c6f"/>
-      </svg>
-
-      <!-- Ankylosaurus -->
-      <svg class="char-mini" width="90" height="80" viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="150" cy="150" rx="100" ry="55" fill="#6B8E6B"/>
-        <circle cx="240" cy="110" r="40" fill="#6B8E6B"/>
-        <ellipse cx="150" cy="120" rx="90" ry="40" fill="#7DA87D"/>
-        <circle cx="252" cy="100" r="5" fill="#1a1a2e"/>
-        <circle cx="254" cy="98" r="2" fill="white"/>
-        <!-- Spikes -->
-        <ellipse cx="100" cy="90" rx="10" ry="18" fill="#4a6b4a" transform="rotate(-15 100 90)"/>
-        <ellipse cx="130" cy="80" rx="10" ry="18" fill="#4a6b4a" transform="rotate(-5 130 80)"/>
-        <ellipse cx="162" cy="78" rx="10" ry="18" fill="#4a6b4a" transform="rotate(5 162 78)"/>
-        <ellipse cx="192" cy="82" rx="10" ry="18" fill="#4a6b4a" transform="rotate(15 192 82)"/>
-        <!-- Club tail -->
-        <path d="M60 155 Q20 155 15 170" stroke="#6B8E6B" stroke-width="12" fill="none" stroke-linecap="round"/>
-        <circle cx="12" cy="177" r="16" fill="#4a6b4a"/>
-      </svg>
+      <div class="title-polaroid">
+        <div class="monogram">K &amp; A</div>
+        <p class="polaroid-caption">Kamran &amp; Alayka</p>
+        <p class="polaroid-sub">our little corner of the internet 💗</p>
+      </div>
     </div>
 
-    <!-- Monogram -->
-    <div class="monogram">K &amp; A</div>
+    <p class="section-hint">— where would you like to go? —</p>
 
-    <div class="heart-icon" aria-hidden="true">💕</div>
-
-    <p class="subtitle">Kamran &amp; Alayka — a little world built just for two</p>
-
-    <div class="divider">Choose your page</div>
-
-    <!-- Navigation Buttons -->
-    <div class="btn-group">
-      <a href="valentines.html" class="btn btn-valentine" id="btn-valentines">
-        <span class="btn-icon">💌</span>
-        Valentine's Day
+    <!-- Nav cards -->
+    <div class="nav-cards">
+      <a href="valentines.html" class="nav-card" id="btn-valentines">
+        <span class="nav-icon">💌</span>
+        <span class="nav-title">Valentine's Day</span>
+        <span class="nav-desc">our first little love story</span>
       </a>
-      <a href="birthday.html" class="btn btn-birthday" id="btn-birthday">
-        <span class="btn-icon">🎂</span>
-        Happy Birthday
+      <a href="birthday.html" class="nav-card" id="btn-birthday">
+        <span class="nav-icon">🎂</span>
+        <span class="nav-title">Happy Birthday</span>
+        <span class="nav-desc">for Alayka, with all my love</span>
       </a>
     </div>
-  </main>
 
-  <p class="footer-note">Made with 💗 just for you</p>
+    <!-- Sticky note -->
+    <div class="sticky" role="note" aria-label="Personal note">
+      <p>Made with so much love by Kamran, just for you 💛<br>don't show anyone else hehe~</p>
+    </div>
+
+    <div class="page-foot">K ♡ A — always &amp; forever</div>
+  </div>
+
+  <!-- Game corner -->
+  <a href="game.html" class="game-corner" id="btn-game" aria-label="Play a game">
+    <div class="game-note">
+      <span class="game-note-icon">🎮</span>
+      <span class="game-note-text">Psst… play a game~</span>
+    </div>
+  </a>
 
   <script>
-    // ---- Floating Hearts ----
-    const heartsContainer = document.getElementById('hearts-container');
-    const heartChars = ['♥', '❤', '💕', '💗', '💖', '💝', '✨', '⭐'];
-    const colors = ['#ff8fbf', '#e74c6f', '#d4a5ff', '#ffb8d0', '#c44569', '#ff6b9d'];
+    const layer  = document.getElementById('hearts-layer');
+    const chars  = ['♥','❤','💕','💗','🌸','✨','💖'];
+    const colors = ['#e74c6f','#ff8fbf','#d4a5ff','#f0a500','#ffb8cf'];
 
     function spawnHeart() {
       const el = document.createElement('span');
-      el.className = 'floating-heart';
-      el.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
-      const size = 14 + Math.random() * 22;
-      const dur = 5 + Math.random() * 7;
-      const delay = Math.random() * 3;
-      const sway = (Math.random() - 0.5) * 160;
-      const rot = (Math.random() - 0.5) * 180;
-      const scale = 0.6 + Math.random() * 0.8;
-      const opacity = 0.3 + Math.random() * 0.5;
+      el.className = 'fheart';
+      const dur = 9 + Math.random() * 6;
+      const del = Math.random() * 3;
       el.style.cssText = `
-        left: ${Math.random() * 100}%;
-        font-size: ${size}px;
-        color: ${colors[Math.floor(Math.random() * colors.length)]};
-        --duration: ${dur}s;
-        --delay: ${delay}s;
-        --sway: ${sway}px;
-        --rotation: ${rot}deg;
-        --scale: ${scale};
-        --max-opacity: ${opacity};
+        left:${Math.random()*100}%;
+        --fs:${12+Math.random()*14}px;
+        --fc:${colors[Math.floor(Math.random()*colors.length)]};
+        --dur:${dur}s; --del:${del}s;
+        --sx:${(Math.random()-0.5)*80}px;
       `;
-      heartsContainer.appendChild(el);
-      setTimeout(() => el.remove(), (dur + delay) * 1000);
+      el.textContent = chars[Math.floor(Math.random()*chars.length)];
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), (dur+del)*1000);
     }
 
-    // Spawn hearts continuously
-    for (let i = 0; i < 12; i++) setTimeout(spawnHeart, i * 400);
-    setInterval(spawnHeart, 600);
-
-    // ---- Sparkles ----
-    for (let i = 0; i < 30; i++) {
-      const sp = document.createElement('div');
-      sp.className = 'sparkle';
-      const size = 2 + Math.random() * 4;
-      sp.style.cssText = `
-        width: ${size}px; height: ${size}px;
-        left: ${Math.random() * 100}%;
-        top: ${Math.random() * 100}%;
-        background: ${['#ff8fbf','#d4a5ff','#fff5f8','#ffb8d0'][Math.floor(Math.random()*4)]};
-        --tw-dur: ${2 + Math.random() * 4}s;
-        --tw-delay: ${Math.random() * 3}s;
-        --tw-op: ${0.3 + Math.random() * 0.5};
-      `;
-      document.body.appendChild(sp);
-    }
-
-    // ---- Click burst hearts ----
-    document.addEventListener('click', (e) => {
-      for (let i = 0; i < 8; i++) {
-        const burst = document.createElement('span');
-        burst.style.cssText = `
-          position: fixed;
-          left: ${e.clientX}px;
-          top: ${e.clientY}px;
-          font-size: ${12 + Math.random() * 14}px;
-          pointer-events: none;
-          z-index: 999;
-          animation: burstOut ${0.6 + Math.random() * 0.4}s ease-out forwards;
-          --bx: ${(Math.random() - 0.5) * 120}px;
-          --by: ${(Math.random() - 0.5) * 120}px;
-        `;
-        burst.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
-        burst.style.color = colors[Math.floor(Math.random() * colors.length)];
-        document.body.appendChild(burst);
-        setTimeout(() => burst.remove(), 1000);
-      }
-    });
-
-    // Inject burst keyframe
-    const style = document.createElement('style');
-    style.textContent = `@keyframes burstOut { 0% { opacity:1; transform:translate(0,0) scale(1); } 100% { opacity:0; transform:translate(var(--bx),var(--by)) scale(0.2); } }`;
-    document.head.appendChild(style);
+    for (let i = 0; i < 5; i++) setTimeout(spawnHeart, i * 900);
+    setInterval(spawnHeart, 1400);
   </script>
 </body>
 </html>
